@@ -1,0 +1,1 @@
+emcc rmc.cpp -o rmc.html -sEXPORTED_FUNCTIONS=_remove_comments -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,stringToNewUTF8,UTF8ToString

@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<title>Remove comments</title>
+		<script src="rmc.js"></script>
+	<script>
+
+function removeComments() {
+	let input = document.getElementById("src").value;
+	let buffer = Module.stringToNewUTF8(input);
+	Module._remove_comments(buffer, input.length);
+	document.getElementById("result").value = Module.UTF8ToString(buffer);
+}
+	</script>
+	
+	</head>
+	<body>
+		<div>
+			<textarea id="src"></textarea>
+			<textarea id="result" disabled="disabled"></textarea>
+			<button onclick="removeComments()">remove comments</button>
+		</div>
+		<div id="result">
+
+		</div>
+	</body>
+
+</html>
