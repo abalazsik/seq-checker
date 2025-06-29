@@ -1,0 +1,30 @@
+:root{
+  --bg:#33d;
+  --fg: #cc2;
+  --brdr: 1px solid #cc2;
+  --brdrr: 3px;
+}
+
+body {
+	background-color: var(--bg);
+	padding: 0px;
+	color: var(--fg);
+}
+
+textarea {
+	width: 49vw;
+	min-height: 30vh;
+	resize: vertical;
+	opacity: 80%;
+	border: var(--brdr);
+	border-radius: var(--brdrr);
+}
+
+button {
+	padding: 4px;
+	background-color: var(--bg);
+	color: var(--fg);
+	border: var(--brdr);
+	border-radius: var(--brdrr);
+	cursor: pointer;
+}
