@@ -5,3 +5,5 @@ notes
 rmc.js
 rmc.wasm
 rmc.html
+tokenizer
+tokenize.test

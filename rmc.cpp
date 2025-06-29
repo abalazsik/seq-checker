@@ -36,6 +36,8 @@ extern "C" void remove_comments(char* buffer, unsigned int length) {
 
 /*
 
+// for manual testing
+
 #include <stdio.h>
 #include <stdlib.h>
 
