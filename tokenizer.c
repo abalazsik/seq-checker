@@ -5,15 +5,14 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include "seq-checker.h"
 
-struct token {
-	size_t from, to;
-};
+ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken) {
+	unsigned int i = (prev == NULL) ? 0 : (prev->to);
+	if (prev != NULL && shouldFreePrevToken) {
+		free(prev);
+	}
 
-typedef struct token *ptoken;
-
-ptoken next_token(char* script, ptoken prev) {
-	unsigned int i = (prev == NULL) ? 0 : (prev->to + 1);
 	size_t len = strlen(script);
 
 	while(i < len && (script[i] == ' ' || script[i] == '\n' || script[i] == '\t')) {
@@ -28,7 +27,7 @@ ptoken next_token(char* script, ptoken prev) {
 
 	result->from = i;
 
-	if (script[i] == '{' || script[i] == '}' || script[i] == ',' || script[i] == '<' || script[i] == '>') {
+	if (script[i] == '{' || script[i] == '}' || script[i] == ',' || script[i] == '<' || script[i] == '>' || script[i] == ';') {
 		result->to = i + 1;
 		return result;
 	} else {
@@ -42,14 +41,14 @@ ptoken next_token(char* script, ptoken prev) {
 	return (ptoken)(-1);
 }
 
-/*
+char* substring(char* src, ptoken token) {
+	size_t from = token->from;
+	size_t to = token->to;
 
-// for manual testing
+	if (from == to) {
+		to++;
+	}
 
-#include <stdio.h>
-#define SIZE 8192
-
-char* copy(char* src, size_t from, size_t to) {
 	char *result = (char *)malloc(sizeof(char) * (to + 1 - from));
 
 	for (size_t i = from; i < to; i++) {
@@ -60,6 +59,13 @@ char* copy(char* src, size_t from, size_t to) {
 
 	return result;
 }
+
+/*
+
+// for manual testing
+
+#include <stdio.h>
+#define SIZE 8192
 
 int main(int argc, char** argv) {
 	
@@ -83,12 +89,10 @@ int main(int argc, char** argv) {
 
 	ptoken curr_token = NULL;
 
-	while((curr_token = next_token(buffer, curr_token)) > 0) {
-		int siz = curr_token->to - curr_token->from;
-		//char dst[siz];
-		//strncpy(dst, buffer + curr_token->from, siz );
+	while((curr_token = next_token(buffer, curr_token, 1)) > 0) {
+		int len = curr_token->to - curr_token->from;
 
-		printf("%d: %s\n", siz, copy(buffer, curr_token->from, curr_token->to));
+		printf("%d: %s\n", len, substring(buffer, curr_token));
 	}
 
 	return 0;

@@ -3,7 +3,11 @@
 #define S_IN_LINE_COMMENT 1
 #define S_IN_BLOCK_COMMENT 2
 
-extern "C" void remove_comments(char* buffer, unsigned int length) {
+#include <string.h>
+
+extern "C" void remove_comments(char* buffer) {
+		unsigned int length = strlen(buffer);
+		
 		int state = S_NORMAL;
 		unsigned int src_idx = 0, dest_idx = 0;
 		
@@ -61,11 +65,11 @@ int main (int argc, char** argv) {
 	
 	size_t length = fread(buffer, sizeof(char), SIZE, inputFile);
 	
-	remove_comments(buffer, length);
+	fclose(inputFile);
+
+	remove_comments(buffer);
 	
 	printf("%s", buffer);
-	
-	fclose(inputFile);
 	
 	return 0;
 }
