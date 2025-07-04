@@ -2,6 +2,8 @@
 #define _SEQ_CHECKER_H_
 
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 void remove_comments(char* buffer);
 
@@ -19,6 +21,8 @@ struct symbol {
 };
 
 typedef struct symbol *psymbol;
+
+int symbol_equals(psymbol a, psymbol b);
 
 struct rule{
 	psymbol before;
@@ -45,5 +49,15 @@ struct sequenceDef {
 };
 
 struct sequenceDef* parse_sequence(char* script);
+
+struct symbol_stack {
+	unsigned int capacity;
+	unsigned int sp;
+	psymbol *symbols;
+};
+
+int isStackEmpty(struct symbol_stack* stack);
+struct symbol_stack* solve(struct sequenceDef* sequenceDef);
+char* stackToString(struct symbol_stack* stack);
 
 #endif

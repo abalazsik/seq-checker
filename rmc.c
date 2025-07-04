@@ -5,7 +5,7 @@
 
 #include <string.h>
 
-extern "C" void remove_comments(char* buffer) {
+extern void remove_comments(char* buffer) {
 		unsigned int length = strlen(buffer);
 		
 		int state = S_NORMAL;

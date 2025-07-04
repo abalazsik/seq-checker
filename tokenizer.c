@@ -2,8 +2,6 @@
 	Tokenizer, that tokenizes the tokenizables.
 */
 
-#include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 #include "seq-checker.h"
 

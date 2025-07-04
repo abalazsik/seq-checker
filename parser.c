@@ -1,5 +1,3 @@
-#include <string.h>
-#include <stdlib.h>
 #include "seq-checker.h"
 
 int isToken(char* script, ptoken at, char* expected) {

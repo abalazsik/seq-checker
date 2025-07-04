@@ -7,6 +7,10 @@ int symbol_equals(psymbol a, psymbol b) {
 		return 1;
 	}
 
+	if (a == NULL || b == NULL) {
+		return 0;
+	}
+
 	size_t len = strlen(a->name);
 
 	if (len != strlen(b->name)) {
@@ -73,12 +77,13 @@ int validate_sequence_def(struct sequenceDef* seqDef) {
 			return 0; // symbols contains after symbol
 		}
 	}
-
+	
 	return 1;
 }
 
+/*
 // for manual testing
-// gcc seq-checker.h tokenizer.c parser.c rmc.cpp validate.c -o validator
+// gcc seq-checker.h tokenizer.c parser.c rmc.c validate.c -o validator
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -135,3 +140,4 @@ int main (int argc, char** argv) {
 	
 	return 0;
 }
+*/

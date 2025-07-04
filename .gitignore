@@ -8,3 +8,7 @@ rmc.html
 tokenizer
 tokenize.test
 parser
+validator
+
+*.o
+*.pch
