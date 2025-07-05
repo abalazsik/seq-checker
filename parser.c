@@ -134,6 +134,8 @@ struct sequenceDef* parse_sequence(char* script) {
 			noRules++;
 		} else if (state == T_W_AFTER_SYMBOL && isToken(script, curr_token, "}")) {
 			state = T_W_RIGHT_BRACKET;
+		} else if (state == T_W_RIGHT_BRACKET && isToken(script, curr_token, ";")) {
+			state = T_SEMICOLON;
 		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET) && isToken(script, curr_token, "starting")) {
 			state = T_STARTING;
 		} else if (state == T_STARTING && isSymbol(script, curr_token)) {
@@ -160,8 +162,17 @@ struct sequenceDef* parse_sequence(char* script) {
 	struct symbolsDef *symbolsDef = (struct symbolsDef*)malloc(sizeof(struct symbolsDef));
 	struct rulesDef *rulesDef = (struct rulesDef*)malloc(sizeof(struct rulesDef));
 
-	rulesDef->starting = new_symbol(script, starting_token);
-	rulesDef->ending = new_symbol(script, ending_token);
+	if (starting_token != NULL) {
+		rulesDef->starting = new_symbol(script, starting_token);
+	} else {
+		rulesDef->starting = NULL; // this mf made me reconsider my life decisions
+	}
+	
+	if (ending_token != NULL) {
+		rulesDef->ending = new_symbol(script, ending_token);
+	} else {
+		rulesDef->ending = NULL;
+	}
 
 	symbolsDef->symbols = (struct symbol**)malloc(sizeof(struct symbol*) * noSymbols);
 	symbolsDef->noSymbols = noSymbols;

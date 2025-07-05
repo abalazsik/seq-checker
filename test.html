@@ -7,8 +7,7 @@
 
 function checkThoseSeqs() {
 	let input = document.getElementById("src").value;
-	let buffer = Module.stringToNewUTF8(input);
-	let result = Module._getSolution(buffer); // TODO: free this
+	let result = Module._getSolution( Module.stringToNewUTF8(input));
 
 	let isError = Module._isError(result);
 	let resultTextArea = document.getElementById("result");
@@ -21,17 +20,35 @@ function checkThoseSeqs() {
 
 	resultTextArea.value = Module.UTF8ToString(Module._getSolutionText(result));
 }
+
+Module['onRuntimeInitialized'] = function() {
+	let version = Module._getVersion();
+
+	document.getElementById("version").innerText = "WASM executable version: " + version;
+}
+
 	</script>
 	
 	</head>
 	<body>
-		<div>
-			<textarea id="src">generate sequence of {B, A, C, D, E} where { E < B, A < C } starting A ending B; </textarea>
-			<textarea id="result" disabled="disabled"></textarea>
-		</div>
-		<div>
-			<button onclick="checkThoseSeqs()">Run</button>
-		</div>
+		<section>
+			<div>
+				<textarea id="src">// Try one of these expressions
+generate sequence of {B, A, C, D, E} where { E < B, A < C } starting A ending B;
+
+//generate sequence of {B, A, C, D, E} ending B;
+
+//generate sequence of {B, C, D, A, E} where { A < C };
+</textarea>
+				<textarea id="result" disabled="disabled"></textarea>
+			</div>
+			<div>
+				<button onclick="checkThoseSeqs()">Run</button>
+			</div>
+		</section>
+		<section>
+			<div id="version"></div>
+		</section>
 	</body>
 
 </html>

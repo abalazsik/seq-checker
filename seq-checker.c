@@ -22,6 +22,11 @@ void freeSequenceDef(struct sequenceDef* seqDef) {
 	free(seqDef);
 }
 
+void freeStack(struct symbol_stack* stack) {
+	free(stack->symbols);
+	free(stack);
+}
+
 char* stackToString(struct symbol_stack* stack) {
 
 	unsigned int size = 0; 
@@ -55,10 +60,10 @@ char* stackToString(struct symbol_stack* stack) {
 
 extern struct solution* getSolution(char* script) {
 	struct solution* solution = (struct solution*)malloc(sizeof(struct solution));
-	solution->isError = 1; 
+	solution->isError = 0; 
 
 	struct sequenceDef* seqDef = parse_sequence(script);
-
+	
 	if (seqDef == NULL) {
 		solution->isError = 1;
 		solution->text = "syntax error";
@@ -74,7 +79,10 @@ extern struct solution* getSolution(char* script) {
 		}
 
 		freeSequenceDef(seqDef);
+		freeStack(actualSolution);
 	}
+
+	free(script);
 
 	return solution;
 }
@@ -87,6 +95,10 @@ extern int isError(struct solution* solution) {
 
 extern char* getSolutionText(struct solution* solution) {
 	return solution->text;
+}
+
+extern int getVersion() {
+	return 1;
 }
 
 /*

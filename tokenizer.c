@@ -36,7 +36,7 @@ ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken) {
 		return result;
 	}
 
-	return (ptoken)(-1);
+	return NULL;
 }
 
 char* substring(char* src, ptoken token) {
