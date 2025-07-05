@@ -1,8 +1,11 @@
 #!/bin/bash -e
 
 function build() {
-	emcc seq-checker.h tokenizer.c parser.c rmc.c validate.c solver.c seq-checker.c -c
-	emcc seq-checker.o tokenizer.o parser.o solver.o validate.o rmc.o -o seq-checker.js -sEXPORTED_FUNCTIONS=_getSolution,_isError,_getSolutionText,_getVersion -sEXPORTED_RUNTIME_METHODS=ccall,cwrap,stringToNewUTF8,UTF8ToString -sSTANDALONE_WASM --no-entry
+	source ./build.sh
+}
+
+function build_on_podman() {
+	podman run --rm -v $(pwd):/src docker.io/emscripten/emsdk sh build.sh
 }
 
 function host() {
@@ -10,7 +13,7 @@ function host() {
 }
 
 function print_help() {
-	echo -e "operations: build host"
+	echo -e "operations: build build_on_podman host"
 }
 
 if [ -z $1 ]
@@ -22,6 +25,8 @@ fi
 case $1 in
 	 "build")
 		  build ;;
+	 "build_on_podman")
+		  build_on_podman ;;
 	 "host")
 		  host ;;
 	 *)
