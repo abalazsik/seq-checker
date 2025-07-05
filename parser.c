@@ -66,7 +66,7 @@ The  format should be:
 #define T_ENDING	18
 #define T_ENDING_SYMBOL 19
 #define T_SEMICOLON	20
-#include <stdio.h>
+
 struct sequenceDef* parse_sequence(char* script) {
 
 	remove_comments(script);
@@ -182,11 +182,14 @@ struct sequenceDef* parse_sequence(char* script) {
 	// collect rules
 	ptoken curr_rule_token = rules_start_token;
 	for (int i = 0; i < noRules; i++) {
-		ptoken rule_after_token =  next_token(script, next_token(script, curr_rule_token, 0), 1);
+		ptoken rule_after_token =  next_token(script, 
+			next_token(script, curr_rule_token, 0), // '<' sign
+		 1);
 		rulesDef->rules[i] = new_rule(script, curr_rule_token, rule_after_token);
 		if (i < noRules - 1) {
-			curr_rule_token = next_token(script, curr_rule_token, 0); // comma
-			curr_rule_token = next_token(script, curr_rule_token, 1);
+			curr_rule_token = next_token(script, 
+				next_token(script, rule_after_token, 1), // comma
+			0);
 		}
 	}
 

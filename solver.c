@@ -1,5 +1,4 @@
 #include "seq-checker.h"
-#include <stdio.h>
 
 struct symbol_stack* createSymbolStack(unsigned int capacity) {
 	struct symbol_stack* stack = (struct symbol_stack*)malloc(sizeof(struct symbol_stack));
@@ -42,19 +41,19 @@ int searchSymbolInStack(struct symbol_stack* stack, psymbol symbol) {
 	return -1;
 }
 
-int isSolution(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
+int isSolutionInt(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
 	struct rulesDef* rules = sequenceDef->rules;
-
-	printf("checking... %s\n", stackToString(stack));
 
 	if(rules->starting != NULL) {
 		if (!symbol_equals(stack->symbols[0], rules->starting)) {
+			//printf("starting does not match\n");
 			return 0;
 		}
 	}
 
 	if(rules->ending != NULL) {
 		if (!symbol_equals(stack->symbols[stack->sp - 1], rules->ending)) {
+			//printf("ending does not match\n");
 			return 0;
 		}
 	}
@@ -66,11 +65,20 @@ int isSolution(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
 		int afterIndex = searchSymbolInStack(stack, rule->after);
 
 		if (beforeIndex == -1 || afterIndex == -1 || (beforeIndex > afterIndex)) {
+			//printf("general rule does not match %s (%d) < %s (%d)\n", rule->before->name, beforeIndex, rule->after->name, afterIndex);
 			return 0;
 		}
 	}
 
 	return 1;
+}
+
+int isSolution(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
+	int result = isSolutionInt(stack, sequenceDef);
+
+	//printf("checking... %s -> %d\n", stackToString(stack), result); // uncomment this, to see it in action (in the browser console)
+
+	return result;
 }
 
 //============
@@ -99,9 +107,7 @@ struct symbolsDef* restOfSymbols(struct symbolsDef *original, psymbol minus) {
 
 int solveSeq(struct symbol_stack* stack, struct sequenceDef* sequenceDef, struct symbolsDef* symbolsToOrder) {
 	if (symbolsToOrder == NULL) {	
-		int i = isSolution(stack, sequenceDef);
-		printf("final destination %d\n", i);
-		return i;
+		return isSolution(stack, sequenceDef);
 	}
 	unsigned int i = 0;
 
@@ -111,12 +117,11 @@ int solveSeq(struct symbol_stack* stack, struct sequenceDef* sequenceDef, struct
 
 		pushOntoSymbolStack(stack, current);
 
-		printf("current: %s st: %d\n", current->name, stack->sp);
 		struct symbolsDef* rest = restOfSymbols(symbolsToOrder, current);
 
 		int result = solveSeq(stack, sequenceDef, rest);
 
-		//free(rest);
+		free(rest);
 
 		if (result) {
 			return result; // solution found, aka succ (https://www.youtube.com/watch?v=z_HWtzUHm6s)

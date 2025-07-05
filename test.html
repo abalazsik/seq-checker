@@ -1,26 +1,36 @@
 <html>
 	<head>
-		<title>Remove comments</title>
-		<script src="rmc.js"></script>
+		<title>Seq Checker</title>
+		<script src="seq-checker.js"></script>
 		<link rel="stylesheet" href="styles.css" />
 	<script>
 
-function removeComments() {
+function checkThoseSeqs() {
 	let input = document.getElementById("src").value;
 	let buffer = Module.stringToNewUTF8(input);
-	Module._remove_comments(buffer, input.length);
-	document.getElementById("result").value = Module.UTF8ToString(buffer);
+	let result = Module._getSolution(buffer); // TODO: free this
+
+	let isError = Module._isError(result);
+	let resultTextArea = document.getElementById("result");
+
+	if (isError) {
+		resultTextArea.style.cssText = 'color: red;';
+	} else {
+		resultTextArea.style.cssText = '';
+	}
+
+	resultTextArea.value = Module.UTF8ToString(Module._getSolutionText(result));
 }
 	</script>
 	
 	</head>
 	<body>
 		<div>
-			<textarea id="src"></textarea>
+			<textarea id="src">generate sequence of {B, A, C, D, E} where { E < B, A < C } starting A ending B; </textarea>
 			<textarea id="result" disabled="disabled"></textarea>
 		</div>
 		<div>
-			<button onclick="removeComments()">remove comments</button>
+			<button onclick="checkThoseSeqs()">Run</button>
 		</div>
 	</body>
 

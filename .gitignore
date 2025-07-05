@@ -9,6 +9,8 @@ tokenizer
 tokenize.test
 parser
 validator
+seq-checker
+seq-checker.js
 
 *.o
 *.pch

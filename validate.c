@@ -130,8 +130,12 @@ int main (int argc, char** argv) {
 		printf("\t %s < %s\n", rule->before->name, rule->after->name);
 	}
 	
-	printf("starting: %s\n", seqDef->rules->starting->name);
-	printf("ending: %s\n", seqDef->rules->ending->name);
+	if (seqDef->rules->starting != NULL) {
+		printf("starting: %s\n", seqDef->rules->starting->name);
+	}
+	if (seqDef->rules->ending != NULL) {
+		printf("ending: %s\n", seqDef->rules->ending->name);
+	}
 	if (validate_sequence_def(seqDef)) {
 		printf("sequence definition is valid\n");
 	} else {

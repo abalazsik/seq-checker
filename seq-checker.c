@@ -22,8 +22,6 @@ void freeSequenceDef(struct sequenceDef* seqDef) {
 	free(seqDef);
 }
 
-#include <stdio.h>
-
 char* stackToString(struct symbol_stack* stack) {
 
 	unsigned int size = 0; 
@@ -31,20 +29,20 @@ char* stackToString(struct symbol_stack* stack) {
 	for (unsigned int i = 0; i < stack->sp; i++) {
 		size += strlen(stack->symbols[i]->name);
 	}
+	
+	if (stack->sp > 1) {
+		size = size + stack->sp;
+	}
 
-	//printf("stacksize: %d\n", stack->sp);
-
-	size = size + stack->sp;
-
-	char* result = (char*)malloc(sizeof(char) * size + 1);
+	char* result = (char*)malloc(sizeof(char) * (size + 1));
 
 	unsigned int ptr = 0;
 
 	for (unsigned int i = 0; i < stack->sp; i++) {
 		char* name = stack->symbols[i]->name;
 		strcpy((char*)(result + ptr), name);
-
 		ptr = ptr + strlen(name);
+
 		if (i < stack->sp - 1) {
 			result[ptr] = '|';
 		}
@@ -91,7 +89,7 @@ extern char* getSolutionText(struct solution* solution) {
 	return solution->text;
 }
 
-
+/*
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -122,3 +120,4 @@ int main(int argc, char** argv) {
 	
 	return 0;
 }
+*/
