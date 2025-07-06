@@ -26,3 +26,8 @@ Due to limitation of wasm module loading, you have to host it on your machine. I
 ```
 
 [Then open the html file](http://localhost:8000/test.html)
+
+Or try it online
+----
+
+[Here](https://frontend-stash.s3.eu-central-1.amazonaws.com/seq-checker/test.html)

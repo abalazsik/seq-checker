@@ -1,12 +1,13 @@
 :root{
   --bg:#33d;
+  --bg2:color-mix(in srgb, var(--bg), black 75%);
   --fg: #cc2;
   --brdr: 1px solid #cc2;
   --brdrr: 3px;
 }
 
 body {
-	background-color: var(--bg);
+	background: linear-gradient(0deg, var(--bg) 0%, var(--bg2) 100%);
 	padding: 0px;
 	color: var(--fg);
 }

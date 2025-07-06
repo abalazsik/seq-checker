@@ -25,7 +25,7 @@ ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken) {
 
 	result->from = i;
 
-	if (script[i] == '{' || script[i] == '}' || script[i] == ',' || script[i] == '<' || script[i] == '>' || script[i] == ';') {
+	if (script[i] == '{' || script[i] == '}' || script[i] == ',' || script[i] == '<' || script[i] == ';') {
 		result->to = i + 1;
 		return result;
 	} else {
