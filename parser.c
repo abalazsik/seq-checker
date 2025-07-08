@@ -20,7 +20,7 @@ int isSymbol(char* script, ptoken at) {
 
 	for (size_t i = 0; i < len; i++) {
 		char ch = script[at->from + i];
-		if ((ch < 'a' && ch > 'z') || (ch < 'A' && ch > 'Z')) {
+		if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))) {
 			return 0;
 		}
 	}

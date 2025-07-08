@@ -1,4 +1,5 @@
 #include "seq-checker.h"
+#include "string-buffer.h"
 
 struct solution {
 	char* text;
@@ -29,33 +30,17 @@ void freeStack(struct symbol_stack* stack) {
 
 char* stackToString(struct symbol_stack* stack) {
 
-	unsigned int size = 0; 
+	psbuffer buffer = newStringBuffer(20);
 
 	for (unsigned int i = 0; i < stack->sp; i++) {
-		size += strlen(stack->symbols[i]->name);
-	}
-	
-	if (stack->sp > 1) {
-		size = size + stack->sp;
-	}
-
-	char* result = (char*)malloc(sizeof(char) * (size + 1));
-
-	unsigned int ptr = 0;
-
-	for (unsigned int i = 0; i < stack->sp; i++) {
-		char* name = stack->symbols[i]->name;
-		strcpy((char*)(result + ptr), name);
-		ptr = ptr + strlen(name);
+		appendString(buffer, stack->symbols[i]->name);
 
 		if (i < stack->sp - 1) {
-			result[ptr] = '|';
+			appendChar(buffer, '|');
 		}
-		ptr++;
 	}
-	//result[size] = 0;
 
-	return result;
+	return unwrap(buffer);
 }
 
 extern struct solution* getSolution(char* script) {
