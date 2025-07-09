@@ -88,6 +88,48 @@ int validate_sequence_def(struct sequenceDef* seqDef) {
 #include <stdio.h>
 #include <stdlib.h>
 
+void printSeqDef(struct sequenceDef* seqDef) {
+	if (seqDef == NULL) {
+		printf("syntax error\n");
+		return;
+	}
+
+	printf("symbols (%d):\n", seqDef->symbols->noSymbols);
+	
+	for (int i = 0; i < seqDef->symbols->noSymbols; i++) {
+		printf("\t %s\n", seqDef->symbols->symbols[i]->name);
+	}
+	
+	printf("rules (%d):\n", seqDef->rules->noRules);
+	
+	for (int i = 0; i < seqDef->rules->noRules; i++) {
+		struct rule* rule = seqDef->rules->rules[i];
+
+		printf("\t %s < %s\n", rule->before->name, rule->after->name);
+	}
+	
+	if (seqDef->rules->starting != NULL) {
+		printf("starting: %s\n", seqDef->rules->starting->name);
+		if (seqDef->rules->notStarting) {
+			printf("\tstarting is negated!\n");
+		}
+	}
+	if (seqDef->rules->ending != NULL) {
+		printf("ending: %s\n", seqDef->rules->ending->name);
+		if (seqDef->rules->notEnding) {
+			printf("\tending is negated!\n");
+		}
+	}
+	printf("limit: %d\n",seqDef->limit);
+
+	if (validate_sequence_def(seqDef)) {
+		printf("sequence definition is valid\n");
+	} else {
+		printf("semantic error!\n");
+	}
+
+}
+
 #define SIZE 8192
 
 int main (int argc, char** argv) {
@@ -112,37 +154,7 @@ int main (int argc, char** argv) {
 
 	struct sequenceDef* seqDef = parse_sequence(buffer);
 
-	if (seqDef == NULL) {
-		printf("syntax error\n");
-	}
-
-	printf("symbols (%d):\n", seqDef->symbols->noSymbols);
-	
-	for (int i = 0; i < seqDef->symbols->noSymbols; i++) {
-		printf("\t %s\n", seqDef->symbols->symbols[i]->name);
-	}
-	
-	printf("rules (%d):\n", seqDef->rules->noRules);
-	
-	for (int i = 0; i < seqDef->rules->noRules; i++) {
-		struct rule* rule = seqDef->rules->rules[i];
-
-		printf("\t %s < %s\n", rule->before->name, rule->after->name);
-	}
-	
-	if (seqDef->rules->starting != NULL) {
-		printf("starting: %s\n", seqDef->rules->starting->name);
-	}
-	if (seqDef->rules->ending != NULL) {
-		printf("ending: %s\n", seqDef->rules->ending->name);
-	}
-	printf("limit: %d\n",seqDef->limit);
-
-	if (validate_sequence_def(seqDef)) {
-		printf("sequence definition is valid\n");
-	} else {
-		printf("semantic error!\n");
-	}
+	printSeqDef(seqDef);
 	
 	return 0;
 }

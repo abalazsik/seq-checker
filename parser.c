@@ -89,8 +89,10 @@ enum parserState {
 	T_W_AFTER_SYMBOL,
 	T_W_COMMA,
 	T_W_RIGHT_BRACKET,
+	T_NOT_1,
 	T_STARTING,
 	T_STARTING_SYMBOL,
+	T_NOT_2,
 	T_ENDING,
 	T_ENDING_SYMBOL,
 	T_LIMIT,
@@ -111,6 +113,8 @@ struct sequenceDef* parse_sequence(char* script) {
 	ptoken starting_token = NULL;
 	ptoken ending_token = NULL;
 	ptoken limit_token = NULL;
+	int has_first_not_token = 0;
+	int has_second_not_token = 0;
 
 	unsigned int noSymbols = 0;
 	unsigned int noRules = 0;
@@ -166,27 +170,31 @@ struct sequenceDef* parse_sequence(char* script) {
 			noRules++;
 		} else if (state == T_W_AFTER_SYMBOL && isToken(script, curr_token, "}")) {
 			state = T_W_RIGHT_BRACKET;
-		} else if (state == T_W_RIGHT_BRACKET && isToken(script, curr_token, ";")) {
-			state = T_SEMICOLON;
-		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET) && isToken(script, curr_token, "starting")) {
+		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET) && isToken(script, curr_token, "not")) {
+			has_first_not_token = 1;
+			state = T_NOT_1;
+		} else if ((state == T_NOT_1 || state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET) && isToken(script, curr_token, "starting")) {
 			state = T_STARTING;
 		} else if (state == T_STARTING && isSymbol(script, curr_token)) {
 			state = T_STARTING_SYMBOL;
 			starting_token = curr_token;
 			shouldFreePrevToken = 0;
-		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET || state == T_STARTING_SYMBOL) && isToken(script, curr_token, "ending")) {
+		} else if (state == T_STARTING_SYMBOL && isToken(script, curr_token, "not")){
+			state = T_NOT_2;
+			has_second_not_token = 1;
+		} else if ((state == T_NOT_1 || state == T_NOT_2 || state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET || state == T_STARTING_SYMBOL) && isToken(script, curr_token, "ending")) {
 			state = T_ENDING;
 		} else if (state == T_ENDING && isSymbol(script, curr_token)) {
 			state = T_ENDING_SYMBOL;
 			ending_token = curr_token;
 			shouldFreePrevToken = 0;
-		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_AFTER_SYMBOL || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL) && isToken(script, curr_token, "limit")) {
+		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_RIGHT_BRACKET || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL) && isToken(script, curr_token, "limit")) {
 			state = T_LIMIT;
 		} else if (state == T_LIMIT && isNumber(script, curr_token)) {
 			state = T_LIMIT_NUMBER;
 			limit_token = curr_token;
 			shouldFreePrevToken = 0;
-		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_AFTER_SYMBOL || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL || state == T_LIMIT_NUMBER) 
+		} else if ((state == T_W_RIGHT_BRACKET || state == T_S_RIGHT_BRACKET || state == T_W_AFTER_SYMBOL || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL || state == T_LIMIT_NUMBER) 
 				&& isToken(script, curr_token, ";")) {
 			state = T_SEMICOLON;
 		} else {
@@ -211,6 +219,21 @@ struct sequenceDef* parse_sequence(char* script) {
 		rulesDef->ending = new_symbol(script, ending_token);
 	} else {
 		rulesDef->ending = NULL;
+	}
+
+	rulesDef->notEnding = 0;
+	rulesDef->notStarting = 0;
+
+	if (has_second_not_token) {
+		rulesDef->notEnding = 1;
+	}
+
+	if (has_first_not_token) {
+		if (starting_token != NULL) {
+			rulesDef->notStarting = 1;
+		} else {
+			rulesDef->notEnding = 1;
+		}
 	}
 
 	symbolsDef->symbols = (struct symbol**)malloc(sizeof(struct symbol*) * noSymbols);

@@ -1,6 +1,8 @@
 #ifndef _SEQ_CHECKER_H_
 #define _SEQ_CHECKER_H_
 
+#define _SEQ_CHECKER_EXECUTABLE_VERSION_ 3
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,7 +41,9 @@ struct symbolsDef {
 
 struct rulesDef {
 	psymbol starting;
+	int notStarting;
 	psymbol ending;
+	int notEnding;
 	unsigned int noRules;
 	struct rule** rules;
 };

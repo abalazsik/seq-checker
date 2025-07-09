@@ -61,7 +61,7 @@ extern char* getSolutionText(psolution solution) {
 }
 
 extern int getVersion() {
-	return 2;
+	return _SEQ_CHECKER_EXECUTABLE_VERSION_;
 }
 
 /*

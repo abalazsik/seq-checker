@@ -47,18 +47,34 @@ int searchSymbolInStack(struct symbol_stack* stack, psymbol symbol) {
 	return -1;
 }
 
+int checkSymbols(psymbol a, psymbol b, int negation) {
+	int equals = symbol_equals(a, b);
+
+	/*
+		equals	|negation	|returns
+		0		|0			|0
+		0		|1			|1
+		1		|0			|1
+		1		|1			|0
+	*/
+
+
+	return (equals && !negation) || (!equals && negation); 
+}
+
+
 int isSolutionInt(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
 	struct rulesDef* rules = sequenceDef->rules;
 
 	if(rules->starting != NULL) {
-		if (!symbol_equals(stack->symbols[0], rules->starting)) {
+		if (!checkSymbols(stack->symbols[0], rules->starting, rules->notStarting)) {
 			//printf("starting does not match\n");
 			return 0;
 		}
 	}
 
 	if(rules->ending != NULL) {
-		if (!symbol_equals(stack->symbols[stack->sp - 1], rules->ending)) {
+		if (!checkSymbols(stack->symbols[stack->sp - 1], rules->ending, rules->notEnding)) {
 			//printf("ending does not match\n");
 			return 0;
 		}
@@ -162,7 +178,7 @@ void solveSeq(
 unsigned int maxSolutions(unsigned int noSymbols) {
 	unsigned int n = 1;
 
-	for (unsigned int i = 1; i < noSymbols; i++) {
+	for (unsigned int i = 1; i <= noSymbols; i++) {
 		n *= i;
 	}
 
