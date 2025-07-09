@@ -73,28 +73,30 @@ The expected format:
 	generate sequence of {A, B, C} where { A < B } starting A ending B limit 10; 
 */
 
-#define T_START		1
-#define T_GENERATE	2
-#define T_SEQUENCE	3
-#define T_OF	4
-#define T_S_LEFT_BRACKET	5
-#define	T_S_SYMBOL	6
-#define T_S_COMMA	7
-#define T_S_RIGHT_BRACKET	8
-#define T_WHERE	9
-#define T_W_LEFT_BRACKET	10
-#define T_W_BEFORE_SYMBOL	11
-#define T_W_GT	12
-#define T_W_AFTER_SYMBOL	13
-#define T_W_COMMA	14
-#define T_W_RIGHT_BRACKET	15
-#define T_STARTING	16
-#define T_STARTING_SYMBOL	17
-#define T_ENDING	18
-#define T_ENDING_SYMBOL 19
-#define T_LIMIT 20
-#define T_LIMIT_NUMBER	21
-#define T_SEMICOLON	22
+enum parserState {
+	T_START = 1,
+	T_GENERATE,
+	T_SEQUENCE,
+	T_OF,
+	T_S_LEFT_BRACKET,
+	T_S_SYMBOL,
+	T_S_COMMA,
+	T_S_RIGHT_BRACKET,
+	T_WHERE,
+	T_W_LEFT_BRACKET,
+	T_W_BEFORE_SYMBOL,
+	T_W_GT,
+	T_W_AFTER_SYMBOL,
+	T_W_COMMA,
+	T_W_RIGHT_BRACKET,
+	T_STARTING,
+	T_STARTING_SYMBOL,
+	T_ENDING,
+	T_ENDING_SYMBOL,
+	T_LIMIT,
+	T_LIMIT_NUMBER,
+	T_SEMICOLON
+};
 
 struct sequenceDef* parse_sequence(char* script) {
 
@@ -102,7 +104,7 @@ struct sequenceDef* parse_sequence(char* script) {
 
 	ptoken curr_token = NULL;
 	
-	int state = T_START;
+	enum parserState state = T_START;
 
 	ptoken symbols_start_token = NULL;
 	ptoken rules_start_token = NULL;
