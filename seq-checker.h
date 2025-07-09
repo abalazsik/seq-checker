@@ -47,6 +47,7 @@ struct rulesDef {
 struct sequenceDef {
 	struct symbolsDef* symbols;
 	struct rulesDef* rules;
+	unsigned int limit;
 };
 
 struct sequenceDef* parse_sequence(char* script);
@@ -57,8 +58,16 @@ struct symbol_stack {
 	psymbol *symbols;
 };
 
+struct solution {
+	char* text;
+	int isError;
+};
+
+typedef struct solution *psolution;
+
 int isStackEmpty(struct symbol_stack* stack);
-struct symbol_stack* solve(struct sequenceDef* sequenceDef);
+void solve(struct sequenceDef* sequenceDef, psolution solution);
 char* stackToString(struct symbol_stack* stack);
+void freeStack(struct symbol_stack* stack);
 
 #endif

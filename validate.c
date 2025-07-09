@@ -136,6 +136,8 @@ int main (int argc, char** argv) {
 	if (seqDef->rules->ending != NULL) {
 		printf("ending: %s\n", seqDef->rules->ending->name);
 	}
+	printf("limit: %d\n",seqDef->limit);
+
 	if (validate_sequence_def(seqDef)) {
 		printf("sequence definition is valid\n");
 	} else {

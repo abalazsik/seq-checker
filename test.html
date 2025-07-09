@@ -19,7 +19,7 @@ function checkThoseSeqs() {
 		resultTextArea.style.cssText = '';
 
 		let solution = Module.UTF8ToString(Module._getSolutionText(result));
-		resultTextArea.value = "Solution found:\n" + solution;
+		resultTextArea.value = "Solution(s) found:\n" + solution;
 	}
 }
 
@@ -36,7 +36,7 @@ Module['onRuntimeInitialized'] = function() {
 		<section>
 			<div>
 				<textarea id="src">// Try one of these expressions
-generate sequence of {B, A, C, D, E} where { E < B, A < C } starting A ending B;
+generate sequence of {B, A, C, D, E} where { E < B, A < C } starting A ending B limit 4;
 
 //generate sequence of {B, A, C, D, E} ending B;
 

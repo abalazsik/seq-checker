@@ -29,7 +29,7 @@ ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken) {
 		result->to = i + 1;
 		return result;
 	} else {
-		while(i < len && ((script[i] >= 'a' && script[i] <= 'z') || (script[i] >= 'A' && script[i] <= 'Z'))) {
+		while(i < len && ((script[i] >= 'a' && script[i] <= 'z') || (script[i] >= 'A' && script[i] <= 'Z') || (script[i] >= '0' && script[i] <= '9'))) {
 			i++;
 		}
 		result->to = i;

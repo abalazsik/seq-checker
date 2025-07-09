@@ -1,4 +1,5 @@
 #include "seq-checker.h"
+#include "string-buffer.h"
 
 struct symbol_stack* createSymbolStack(unsigned int capacity) {
 	struct symbol_stack* stack = (struct symbol_stack*)malloc(sizeof(struct symbol_stack));
@@ -29,6 +30,11 @@ psymbol popFromStack(struct symbol_stack* stack) {
 	}
 
 	return stack->symbols[stack->sp--];
+}
+
+void freeStack(struct symbol_stack* stack) {
+	free(stack->symbols);
+	free(stack);
 }
 
 int searchSymbolInStack(struct symbol_stack* stack, psymbol symbol) {
@@ -105,10 +111,28 @@ struct symbolsDef* restOfSymbols(struct symbolsDef *original, psymbol minus) {
 	return result;
 }
 
-int solveSeq(struct symbol_stack* stack, struct sequenceDef* sequenceDef, struct symbolsDef* symbolsToOrder) {
-	if (symbolsToOrder == NULL) {	
-		return isSolution(stack, sequenceDef);
+void solveSeq(
+	struct symbol_stack* stack,
+	struct sequenceDef* sequenceDef,
+	struct symbolsDef* symbolsToOrder,
+	unsigned int *foundSolutions,
+	psbuffer buffer) {
+
+	if (*foundSolutions >= sequenceDef->limit) {
+		return;
 	}
+
+	if (symbolsToOrder == NULL) {
+		if(isSolution(stack, sequenceDef)) {// solution found, aka succ (https://www.youtube.com/watch?v=z_HWtzUHm6s)
+			char* stackAString = stackToString(stack);
+			appendString(buffer, stackAString);
+			appendString(buffer, "\n");
+			free(stackAString);
+			*foundSolutions = *foundSolutions + 1;
+		}
+		return;
+	}
+
 	unsigned int i = 0;
 
 	// TODO: here we could validate the semi-solution, to speed up the search
@@ -119,34 +143,53 @@ int solveSeq(struct symbol_stack* stack, struct sequenceDef* sequenceDef, struct
 
 		struct symbolsDef* rest = restOfSymbols(symbolsToOrder, current);
 
-		int result = solveSeq(stack, sequenceDef, rest);
+		solveSeq(stack, sequenceDef, rest, foundSolutions, buffer);
 
-		free(rest);
+		if (rest != NULL) {
+			free(rest);
+		}
 
-		if (result) {
-			return result; // solution found, aka succ (https://www.youtube.com/watch?v=z_HWtzUHm6s)
+		if (*foundSolutions >= sequenceDef->limit) {
+			return;
 		} else {
 			popFromStack(stack);
 			i++;
 		}
 
 	} while(i < symbolsToOrder->noSymbols);
-
-	return isSolution(stack, sequenceDef);
 }
 
-struct symbol_stack* solve(struct sequenceDef* sequenceDef) {
+unsigned int maxSolutions(unsigned int noSymbols) {
+	unsigned int n = 1;
 
+	for (unsigned int i = 1; i < noSymbols; i++) {
+		n *= i;
+	}
+
+	return n;
+}
+
+void solve(struct sequenceDef* sequenceDef, psolution solution) {
 	unsigned int noSymbols = sequenceDef->symbols->noSymbols;
 	struct symbol_stack* stack = createSymbolStack(noSymbols);
 
-	int successful = solveSeq(stack, sequenceDef, sequenceDef->symbols);
+	unsigned int limit = maxSolutions(noSymbols);
 
-	if (!successful) { // if there is no solution, we remove everything from the stack
-		while(!isStackEmpty(stack)) {
-			popFromStack(stack);
-		}
+	if (limit < sequenceDef->limit) {
+		sequenceDef->limit = limit;
 	}
 
-	return stack;
+	unsigned int foundSolutions = 0;
+
+	psbuffer buffer = newStringBuffer(10);
+
+	solveSeq(stack, sequenceDef, sequenceDef->symbols, &foundSolutions, buffer);
+	freeStack(stack);
+
+	if (foundSolutions == 0) {
+		appendString(buffer, "no solutions");
+		solution->isError = 1;
+	}
+
+	solution->text = unwrap(buffer);
 }

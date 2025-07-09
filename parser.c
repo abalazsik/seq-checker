@@ -16,10 +16,8 @@ int isToken(char* script, ptoken at, char* expected) {
 }
 
 int isSymbol(char* script, ptoken at) {
-	size_t len = at->to - at->from;
-
-	for (size_t i = 0; i < len; i++) {
-		char ch = script[at->from + i];
+	for (size_t i = at->from; i < at->to; i++) {
+		char ch = script[i];
 		if (!((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z'))) {
 			return 0;
 		}
@@ -27,6 +25,22 @@ int isSymbol(char* script, ptoken at) {
 
 	return 1;
 }
+
+int isNumber(char* script, ptoken at) {
+	if (script[at->from] == '0') {
+		return 0;
+	}
+
+	for (size_t i = at->from; i < at->to; i++) {
+		char ch = script[i];
+		if (!(ch >= '0' && ch <= '9')) {
+			return 0;
+		}
+	}
+
+	return 1;
+}
+
 
 psymbol new_symbol(char* script, ptoken curr_token) {
 	psymbol sym = (psymbol)malloc(sizeof(struct symbol));
@@ -41,9 +55,22 @@ prule new_rule(char* script, ptoken before_token, ptoken after_token) {
 	return rule;
 }
 
+unsigned int token_to_number(char* script, ptoken curr_token) {
+	unsigned int result = 0;
+
+	size_t i = curr_token->from;
+
+	while(i < curr_token->to) {
+		result = result * 10 + (script[i++] - '0');
+	}
+
+	return result;
+}
+
+
 /*
-The  format should be:
-	generate sequence of {A, B, C} where { A < B } starting A ending B; 
+The expected format:
+	generate sequence of {A, B, C} where { A < B } starting A ending B limit 10; 
 */
 
 #define T_START		1
@@ -65,7 +92,9 @@ The  format should be:
 #define T_STARTING_SYMBOL	17
 #define T_ENDING	18
 #define T_ENDING_SYMBOL 19
-#define T_SEMICOLON	20
+#define T_LIMIT 20
+#define T_LIMIT_NUMBER	21
+#define T_SEMICOLON	22
 
 struct sequenceDef* parse_sequence(char* script) {
 
@@ -79,6 +108,7 @@ struct sequenceDef* parse_sequence(char* script) {
 	ptoken rules_start_token = NULL;
 	ptoken starting_token = NULL;
 	ptoken ending_token = NULL;
+	ptoken limit_token = NULL;
 
 	unsigned int noSymbols = 0;
 	unsigned int noRules = 0;
@@ -148,7 +178,14 @@ struct sequenceDef* parse_sequence(char* script) {
 			state = T_ENDING_SYMBOL;
 			ending_token = curr_token;
 			shouldFreePrevToken = 0;
-		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_AFTER_SYMBOL || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL) && isToken(script, curr_token, ";")) {
+		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_AFTER_SYMBOL || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL) && isToken(script, curr_token, "limit")) {
+			state = T_LIMIT;
+		} else if (state == T_LIMIT && isNumber(script, curr_token)) {
+			state = T_LIMIT_NUMBER;
+			limit_token = curr_token;
+			shouldFreePrevToken = 0;
+		} else if ((state == T_S_RIGHT_BRACKET || state == T_W_AFTER_SYMBOL || state == T_STARTING_SYMBOL || state == T_ENDING_SYMBOL || state == T_LIMIT_NUMBER) 
+				&& isToken(script, curr_token, ";")) {
 			state = T_SEMICOLON;
 		} else {
 			return NULL; // syntax error
@@ -203,11 +240,18 @@ struct sequenceDef* parse_sequence(char* script) {
 			0);
 		}
 	}
+	
+	unsigned int limit = 1; // default
+
+	if (limit_token != NULL) {
+		limit = token_to_number(script, limit_token);
+	}
 
 	struct sequenceDef* sequenceDef = (struct sequenceDef*)malloc(sizeof(struct sequenceDef));
 
 	sequenceDef->symbols = symbolsDef;
 	sequenceDef->rules = rulesDef;
+	sequenceDef->limit = limit;
 
 	return sequenceDef;
 }
