@@ -21,10 +21,8 @@ void expandStringBufferCapacity(psbuffer buffer) {
 	unsigned int newCapacity = buffer->capacity * 2;
 	char* newText = (char*)malloc(sizeof(char) * newCapacity);
 
-	memcpy(newText, buffer->text, sizeof(char) * buffer->capacity); 
-
-	for (unsigned int i = buffer->capacity; i < newCapacity; i++) {
-		newText[i] = 0;
+	for (unsigned int i = 0; i < newCapacity; i++) {
+		newText[i] = i < buffer->capacity ? buffer->text[i] : 0;
 	}
 
 	free(buffer->text);
@@ -33,21 +31,25 @@ void expandStringBufferCapacity(psbuffer buffer) {
 }
 
 void appendChar(psbuffer buffer, char ch) {
-	if (buffer->length + 1 >= buffer->capacity) {
+	while (buffer->length + 1 >= buffer->capacity) {
 		expandStringBufferCapacity(buffer);
 	}
 
-	buffer->text[buffer->length++] = ch;
+	buffer->text[buffer->length] = ch;
+	buffer->length++;
 }
 
 void appendString(psbuffer buffer, char *text) {
 	size_t len = strlen(text);
 
-	if (buffer->length + len >= buffer->capacity) {
+	while (buffer->length + len >= buffer->capacity) {
 		expandStringBufferCapacity(buffer);
 	}
 
-	strcpy((char*)(buffer->text + buffer->length), text);
+	for (unsigned int i = 0; i < len; i++) {
+		buffer->text[buffer->length + i] = text[i];
+	}
+
 	buffer->length += len;
 }
 
