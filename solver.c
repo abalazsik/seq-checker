@@ -6,6 +6,7 @@ struct symbol_stack* createSymbolStack(unsigned int capacity) {
 
 	stack->symbols = (psymbol*)malloc(sizeof(psymbol) * capacity);
 	stack->capacity = capacity;
+	stack->sp = 0;
 
 	return stack;
 }

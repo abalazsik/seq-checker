@@ -9,8 +9,15 @@ tokenizer
 tokenize.test
 parser
 validator
+
 seq-checker
 seq-checker.js
+seq-checker.so
 
 *.o
 *.pch
+
+SeqChecker.h
+SeqChecker.class
+hs_err_**.log
+*.test

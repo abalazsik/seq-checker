@@ -31,3 +31,24 @@ Or try it online
 ----
 
 [Here](https://frontend-stash.s3.eu-central-1.amazonaws.com/seq-checker/test.html)
+
+Java example
+----
+
+Now it includes an example for calling it (as a native library) from java.
+
+Build the linux library with:
+
+```
+./script.sh build_lib
+```
+
+Run the example:
+
+```
+java SeqCheckerTest.java
+```
+
+Requirements:
+- Java (Tested with Temurin openjdk 23.0.2)  
+- GCC 14.2.0  

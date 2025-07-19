@@ -48,7 +48,7 @@ char* substring(char* src, ptoken token) {
 	}
 
 	unsigned int len = to - from;
-	char *result = (char *)malloc(sizeof(char) * len + 1);
+	char *result = (char *)malloc(sizeof(char) * (len + 1));
 
 	for (size_t i = 0; i < len; i++) {
 		result[i] = src[i + from];
