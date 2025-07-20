@@ -1,8 +1,8 @@
 #include "seq-checker.h"
 #include "string-buffer.h"
 
-struct symbol_stack* createSymbolStack(unsigned int capacity) {
-	struct symbol_stack* stack = (struct symbol_stack*)malloc(sizeof(struct symbol_stack));
+struct symbolStack* createSymbolStack(unsigned int capacity) {
+	struct symbolStack* stack = (struct symbolStack*)malloc(sizeof(struct symbolStack));
 
 	stack->symbols = (psymbol*)malloc(sizeof(psymbol) * capacity);
 	stack->capacity = capacity;
@@ -11,7 +11,7 @@ struct symbol_stack* createSymbolStack(unsigned int capacity) {
 	return stack;
 }
 
-int pushOntoSymbolStack(struct symbol_stack* stack, psymbol symbol) {
+int pushOntoSymbolStack(struct symbolStack* stack, psymbol symbol) {
 	if (stack->sp < stack->capacity) {
 		stack->symbols[stack->sp] = symbol;
 		stack->sp++;
@@ -21,11 +21,11 @@ int pushOntoSymbolStack(struct symbol_stack* stack, psymbol symbol) {
 	}
 }
 
-int isStackEmpty(struct symbol_stack* stack) {
+int isStackEmpty(struct symbolStack* stack) {
 	return stack->sp == 0;
 }
 
-psymbol popFromStack(struct symbol_stack* stack) {
+psymbol popFromStack(struct symbolStack* stack) {
 	if (isStackEmpty(stack)) {
 		return NULL;
 	}
@@ -33,14 +33,14 @@ psymbol popFromStack(struct symbol_stack* stack) {
 	return stack->symbols[stack->sp--];
 }
 
-void freeStack(struct symbol_stack* stack) {
+void freeStack(struct symbolStack* stack) {
 	free(stack->symbols);
 	free(stack);
 }
 
-int searchSymbolInStack(struct symbol_stack* stack, psymbol symbol) {
+int searchSymbolInStack(struct symbolStack* stack, psymbol symbol) {
 	for (int i = 0; i < stack->sp; i++) {
-		if (symbol_equals(stack->symbols[i], symbol)) {
+		if (symbolEquals(stack->symbols[i], symbol)) {
 			return i;
 		}
 	}
@@ -49,7 +49,7 @@ int searchSymbolInStack(struct symbol_stack* stack, psymbol symbol) {
 }
 
 int checkSymbols(psymbol a, psymbol b, int negation) {
-	int equals = symbol_equals(a, b);
+	int equals = symbolEquals(a, b);
 
 	/*
 		equals	|negation	|returns
@@ -64,7 +64,7 @@ int checkSymbols(psymbol a, psymbol b, int negation) {
 }
 
 
-int isSolutionInt(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
+int isSolutionInt(struct symbolStack* stack, struct sequenceDef* sequenceDef) {
 	struct rulesDef* rules = sequenceDef->rules;
 
 	if(rules->starting != NULL) {
@@ -96,7 +96,7 @@ int isSolutionInt(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
 	return 1;
 }
 
-int isSolution(struct symbol_stack* stack, struct sequenceDef* sequenceDef) {
+int isSolution(struct symbolStack* stack, struct sequenceDef* sequenceDef) {
 	int result = isSolutionInt(stack, sequenceDef);
 
 	//printf("checking... %s -> %d\n", stackToString(stack), result); // uncomment this, to see it in action (in the browser console)
@@ -119,7 +119,7 @@ struct symbolsDef* restOfSymbols(struct symbolsDef *original, psymbol minus) {
 	size_t dest = 0;
 
 	for (size_t i = 0; i < original->noSymbols; i++) {
-		if (!symbol_equals(original->symbols[i], minus)) {
+		if (!symbolEquals(original->symbols[i], minus)) {
 			result->symbols[dest] = original->symbols[i];
 			dest++;
 		}
@@ -129,7 +129,7 @@ struct symbolsDef* restOfSymbols(struct symbolsDef *original, psymbol minus) {
 }
 
 void solveSeq(
-	struct symbol_stack* stack,
+	struct symbolStack* stack,
 	struct sequenceDef* sequenceDef,
 	struct symbolsDef* symbolsToOrder,
 	unsigned int *foundSolutions,
@@ -188,7 +188,7 @@ unsigned int maxSolutions(unsigned int noSymbols) {
 
 void solve(struct sequenceDef* sequenceDef, presult result) {
 	unsigned int noSymbols = sequenceDef->symbols->noSymbols;
-	struct symbol_stack* stack = createSymbolStack(noSymbols);
+	struct symbolStack* stack = createSymbolStack(noSymbols);
 
 	unsigned int limit = maxSolutions(noSymbols);
 

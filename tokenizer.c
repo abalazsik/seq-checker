@@ -5,7 +5,7 @@
 #include <string.h>
 #include "seq-checker.h"
 
-ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken) {
+ptoken nextToken(char* script, ptoken prev, int shouldFreePrevToken) {
 	unsigned int i = (prev == NULL) ? 0 : (prev->to);
 	if (prev != NULL && shouldFreePrevToken) {
 		free(prev);
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
 
 	ptoken curr_token = NULL;
 
-	while((curr_token = next_token(buffer, curr_token, 1)) > 0) {
+	while((curr_token = nextToken(buffer, curr_token, 1)) > 0) {
 		int len = curr_token->to - curr_token->from;
 
 		printf("%d: %s\n", len, substring(buffer, curr_token));

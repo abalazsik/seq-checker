@@ -42,20 +42,20 @@ int isNumber(char* script, ptoken at) {
 }
 
 
-psymbol new_symbol(char* script, ptoken curr_token) {
+psymbol newSymbol(char* script, ptoken curr_token) {
 	psymbol sym = (psymbol)malloc(sizeof(struct symbol));
 	sym->name = substring(script, curr_token);
 	return sym;
 }
 
-prule new_rule(char* script, ptoken before_token, ptoken after_token) {
+prule newRule(char* script, ptoken before_token, ptoken after_token) {
 	prule rule = (prule)malloc(sizeof(struct rule));
-	rule->before = new_symbol(script, before_token);
-	rule->after = new_symbol(script, after_token);
+	rule->before = newSymbol(script, before_token);
+	rule->after = newSymbol(script, after_token);
 	return rule;
 }
 
-unsigned int token_to_number(char* script, ptoken curr_token) {
+unsigned int tokenToNumber(char* script, ptoken curr_token) {
 	unsigned int result = 0;
 
 	size_t i = curr_token->from;
@@ -100,7 +100,7 @@ enum parserState {
 	T_SEMICOLON
 };
 
-struct sequenceDef* parse_sequence(char* script) {
+struct sequenceDef* parseSequence(char* script) {
 
 	ptoken curr_token = NULL;
 	
@@ -119,7 +119,7 @@ struct sequenceDef* parse_sequence(char* script) {
 
 	int shouldFreePrevToken = 0;
 
-	while ((curr_token = next_token(script, curr_token, shouldFreePrevToken)) != NULL) { // check syntax & extract pointers
+	while ((curr_token = nextToken(script, curr_token, shouldFreePrevToken)) != NULL) { // check syntax & extract pointers
 		shouldFreePrevToken = 1;
 
 		//printf("%s\n", substring(script, curr_token));
@@ -208,13 +208,13 @@ struct sequenceDef* parse_sequence(char* script) {
 	struct rulesDef *rulesDef = (struct rulesDef*)malloc(sizeof(struct rulesDef));
 
 	if (starting_token != NULL) {
-		rulesDef->starting = new_symbol(script, starting_token);
+		rulesDef->starting = newSymbol(script, starting_token);
 	} else {
 		rulesDef->starting = NULL; // this mf made me reconsider my life decisions
 	}
 	
 	if (ending_token != NULL) {
-		rulesDef->ending = new_symbol(script, ending_token);
+		rulesDef->ending = newSymbol(script, ending_token);
 	} else {
 		rulesDef->ending = NULL;
 	}
@@ -240,10 +240,10 @@ struct sequenceDef* parse_sequence(char* script) {
 	// collect symbols
 	ptoken curr_symbol_token = symbols_start_token;
 	for (int i = 0; i < noSymbols; i++) {
-		symbolsDef->symbols[i] = new_symbol(script, curr_symbol_token);
+		symbolsDef->symbols[i] = newSymbol(script, curr_symbol_token);
 		if (i < noSymbols - 1) {
-			curr_symbol_token = next_token(script, curr_symbol_token, 0); // comma
-			curr_symbol_token = next_token(script, curr_symbol_token, 1);
+			curr_symbol_token = nextToken(script, curr_symbol_token, 0); // comma
+			curr_symbol_token = nextToken(script, curr_symbol_token, 1);
 		}
 	}
 
@@ -253,13 +253,13 @@ struct sequenceDef* parse_sequence(char* script) {
 	// collect rules
 	ptoken curr_rule_token = rules_start_token;
 	for (int i = 0; i < noRules; i++) {
-		ptoken rule_after_token =  next_token(script, 
-			next_token(script, curr_rule_token, 0), // '<' sign
+		ptoken rule_after_token =  nextToken(script, 
+			nextToken(script, curr_rule_token, 0), // '<' sign
 		 1);
-		rulesDef->rules[i] = new_rule(script, curr_rule_token, rule_after_token);
+		rulesDef->rules[i] = newRule(script, curr_rule_token, rule_after_token);
 		if (i < noRules - 1) {
-			curr_rule_token = next_token(script, 
-				next_token(script, rule_after_token, 1), // comma
+			curr_rule_token = nextToken(script, 
+				nextToken(script, rule_after_token, 1), // comma
 			0);
 		}
 	}
@@ -267,7 +267,7 @@ struct sequenceDef* parse_sequence(char* script) {
 	unsigned int limit = 1; // default
 
 	if (limit_token != NULL) {
-		limit = token_to_number(script, limit_token);
+		limit = tokenToNumber(script, limit_token);
 	}
 
 	struct sequenceDef* sequenceDef = (struct sequenceDef*)malloc(sizeof(struct sequenceDef));

@@ -14,7 +14,7 @@ struct token {
 
 typedef struct token *ptoken;
 
-ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken);
+ptoken nextToken(char* script, ptoken prev, int shouldFreePrevToken);
 char* substring(char* src, ptoken token);
 
 struct symbol {
@@ -23,7 +23,7 @@ struct symbol {
 
 typedef struct symbol *psymbol;
 
-int symbol_equals(psymbol a, psymbol b);
+int symbolEquals(psymbol a, psymbol b);
 
 struct rule{
 	psymbol before;
@@ -52,9 +52,9 @@ struct sequenceDef {
 	unsigned int limit;
 };
 
-struct sequenceDef* parse_sequence(char* script);
+struct sequenceDef* parseSequence(char* script);
 
-struct symbol_stack {
+struct symbolStack {
 	unsigned int capacity;
 	unsigned int sp;
 	psymbol *symbols;
@@ -67,9 +67,9 @@ struct result {
 
 typedef struct result *presult;
 
-int isStackEmpty(struct symbol_stack* stack);
+int isStackEmpty(struct symbolStack* stack);
 void solve(struct sequenceDef* sequenceDef, presult result);
-char* stackToString(struct symbol_stack* stack);
-void freeStack(struct symbol_stack* stack);
+char* stackToString(struct symbolStack* stack);
+void freeStack(struct symbolStack* stack);
 
 #endif

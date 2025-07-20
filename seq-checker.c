@@ -18,7 +18,7 @@ void freeSequenceDef(struct sequenceDef* seqDef) {
 	free(seqDef);
 }
 
-char* stackToString(struct symbol_stack* stack) {
+char* stackToString(struct symbolStack* stack) {
 	psbuffer buffer = newStringBuffer(20);
 
 	for (unsigned int i = 0; i < stack->sp; i++) {
@@ -36,7 +36,7 @@ extern presult getSolution(char* script) {
 	presult result = (presult)malloc(sizeof(struct result));
 	result->isError = 0;
 
-	struct sequenceDef* seqDef = parse_sequence(script);
+	struct sequenceDef* seqDef = parseSequence(script);
 	if (seqDef == NULL) {
 		result->isError = 1;
 		result->text = "syntax error";

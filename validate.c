@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include "seq-checker.h"
 
-int symbol_equals(psymbol a, psymbol b) {
+int symbolEquals(psymbol a, psymbol b) {
 	if (a == b) {
 		return 1;
 	}
@@ -26,19 +26,19 @@ int symbol_equals(psymbol a, psymbol b) {
 	return 1;
 }
 
-int symbol_defs_contains_symbol(struct sequenceDef* seqDef, psymbol symbol) {
+int symbolDefsContainsSymbol(struct sequenceDef* seqDef, psymbol symbol) {
 	for (size_t i = 0; i < seqDef->symbols->noSymbols; i++) {
-		if (symbol_equals(seqDef->symbols->symbols[i], symbol)) {
+		if (symbolEquals(seqDef->symbols->symbols[i], symbol)) {
 			return 1;
 		}
 	}
 	return 0;
 }
 
-int validate_sequence_def(struct sequenceDef* seqDef) {
+int validateSequenceDef(struct sequenceDef* seqDef) {
 	for (size_t i = 0; i < seqDef->symbols->noSymbols - 1; i++) {// unique symbols check
 		for (size_t j = i + 1; j < seqDef->symbols->noSymbols; j++) {
-			if (symbol_equals(seqDef->symbols->symbols[i],seqDef->symbols->symbols[j])) {
+			if (symbolEquals(seqDef->symbols->symbols[i],seqDef->symbols->symbols[j])) {
 				return 0;
 			}
 		}	
@@ -48,32 +48,32 @@ int validate_sequence_def(struct sequenceDef* seqDef) {
 	psymbol ending = seqDef->rules->ending;
 
 	if (starting != NULL) {
-		if (!symbol_defs_contains_symbol(seqDef, starting)) { 
+		if (!symbolDefsContainsSymbol(seqDef, starting)) { 
 			return 0; // symbol defs does not contains starting symbol
 		}
 	}
 
 	if (ending != NULL) {
-		if (!symbol_defs_contains_symbol(seqDef, ending)) { 
+		if (!symbolDefsContainsSymbol(seqDef, ending)) { 
 			return 0; // symbol defs does not contains ending symbol
 		}
 	}
 
 	if (starting != NULL && ending != NULL) { 
-		if (symbol_equals(starting, ending)) {
+		if (symbolEquals(starting, ending)) {
 			return 0; // starting and ending cannot be the same
 		}
 	}
 
 	for (size_t i = 0; i < seqDef->rules->noRules; i++) {
 		prule rule = seqDef->rules->rules[i];
-		if (symbol_equals(rule->before, rule->after)) { 
+		if (symbolEquals(rule->before, rule->after)) { 
 			return 0; // rule.before != rule.after
 		}
-		if (!symbol_defs_contains_symbol(seqDef, rule->before)) {
+		if (!symbolDefsContainsSymbol(seqDef, rule->before)) {
 			return 0; // symbols contains before symbol
 		}
-		if (!symbol_defs_contains_symbol(seqDef, rule->after)) {
+		if (!symbolDefsContainsSymbol(seqDef, rule->after)) {
 			return 0; // symbols contains after symbol
 		}
 	}
@@ -122,7 +122,7 @@ void printSeqDef(struct sequenceDef* seqDef) {
 	}
 	printf("limit: %d\n",seqDef->limit);
 
-	if (validate_sequence_def(seqDef)) {
+	if (validateSequenceDef(seqDef)) {
 		printf("sequence definition is valid\n");
 	} else {
 		printf("semantic error!\n");
@@ -152,7 +152,7 @@ int main (int argc, char** argv) {
 
 	fclose(inputFile);
 
-	struct sequenceDef* seqDef = parse_sequence(buffer);
+	struct sequenceDef* seqDef = parseSequence(buffer);
 
 	printSeqDef(seqDef);
 	
