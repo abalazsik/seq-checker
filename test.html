@@ -14,11 +14,11 @@ function checkThoseSeqs() {
 
 	if (isError) {
 		resultTextArea.style.cssText = 'color: red;';
-		resultTextArea.value = Module.UTF8ToString(Module._getSolutionText(result));
+		resultTextArea.value = Module.UTF8ToString(Module._getResultText(result));
 	} else {
 		resultTextArea.style.cssText = '';
 
-		let solution = Module.UTF8ToString(Module._getSolutionText(result));
+		let solution = Module.UTF8ToString(Module._getResultText(result));
 		resultTextArea.value = "Solution(s) found:\n" + solution;
 	}
 }

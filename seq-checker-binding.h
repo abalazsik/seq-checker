@@ -2,11 +2,11 @@
 #define _SEQ_CHECKER_BINDING_H_
 
 //hide the actual details from the """user"""
-typedef void* psolution;
+typedef void* presult;
 
-psolution getSolution(char* script);
-int isError(psolution solution);
-char* getSolutionText(psolution solution);
+presult getSolution(char* script);
+int isError(presult result);
+char* getResultText(presult result);
 int getVersion();
 
 #endif

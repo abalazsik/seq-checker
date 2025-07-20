@@ -186,7 +186,7 @@ unsigned int maxSolutions(unsigned int noSymbols) {
 	return n;
 }
 
-void solve(struct sequenceDef* sequenceDef, psolution solution) {
+void solve(struct sequenceDef* sequenceDef, presult result) {
 	unsigned int noSymbols = sequenceDef->symbols->noSymbols;
 	struct symbol_stack* stack = createSymbolStack(noSymbols);
 
@@ -205,8 +205,8 @@ void solve(struct sequenceDef* sequenceDef, psolution solution) {
 
 	if (foundSolutions == 0) {
 		appendString(buffer, "no solutions");
-		solution->isError = 1;
+		result->isError = 1;
 	}
 
-	solution->text = unwrap(buffer);
+	result->text = unwrap(buffer);
 }

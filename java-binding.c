@@ -8,18 +8,18 @@ JNIEXPORT jstring JNICALL Java_SeqChecker_getSolution(JNIEnv *env, jclass clz, j
 
 	const char* scriptAsCharArray = (*env)->GetStringUTFChars(env, script, &copy);
 
-	psolution solution = getSolution(scriptAsCharArray);
+	presult result = getSolution(scriptAsCharArray);
 
-	if (isError(solution)) {
+	if (isError(result)) {
 		(*env)->ThrowNew(
 			env,
 			(*env)->FindClass(env,"java.lang.IllegalArgumentException"),
-			getSolutionText(solution)
+			getResultText(result)
 		);
 		return NULL;
 	}
 
-	return (*env)->NewStringUTF(env, getSolutionText(solution)); 
+	return (*env)->NewStringUTF(env, getResultText(result)); 
 }
 
 JNIEXPORT jint JNICALL Java_SeqChecker_getVersion(JNIEnv *env, jclass clz) {

@@ -32,32 +32,32 @@ char* stackToString(struct symbol_stack* stack) {
 	return unwrap(buffer);
 }
 
-extern psolution getSolution(char* script) {
-	psolution solution = (psolution)malloc(sizeof(struct solution));
-	solution->isError = 0;
+extern presult getSolution(char* script) {
+	presult result = (presult)malloc(sizeof(struct result));
+	result->isError = 0;
 
 	struct sequenceDef* seqDef = parse_sequence(script);
 	if (seqDef == NULL) {
-		solution->isError = 1;
-		solution->text = "syntax error";
+		result->isError = 1;
+		result->text = "syntax error";
 	} else {
-		solve(seqDef, solution);
+		solve(seqDef, result);
 		freeSequenceDef(seqDef);
 	}
 
 	//free(script);
 
-	return solution;
+	return result;
 }
 
 // Helper functions we can use from js to extract the result
 
-extern int isError(psolution solution) {
-	return solution->isError;
+extern int isError(presult result) {
+	return result->isError;
 }
 
-extern char* getSolutionText(psolution solution) {
-	return solution->text;
+extern char* getResultText(presult result) {
+	return result->text;
 }
 
 extern int getVersion() {
@@ -91,9 +91,9 @@ int main(int argc, char** argv) {
 	
 	fclose(inputFile);
 
-	struct solution* solution = getSolution(buffer);
+	struct result* result = getSolution(buffer);
 
-	printf("%s\n", getSolutionText(solution));
+	printf("%s\n", getResultText(result));
 	
 	return 0;
 }

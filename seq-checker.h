@@ -62,15 +62,15 @@ struct symbol_stack {
 	psymbol *symbols;
 };
 
-struct solution {
+struct result {
 	char* text;
 	int isError;
 };
 
-typedef struct solution *psolution;
+typedef struct result *presult;
 
 int isStackEmpty(struct symbol_stack* stack);
-void solve(struct sequenceDef* sequenceDef, psolution solution);
+void solve(struct sequenceDef* sequenceDef, presult result);
 char* stackToString(struct symbol_stack* stack);
 void freeStack(struct symbol_stack* stack);
 
