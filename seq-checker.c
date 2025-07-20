@@ -65,7 +65,7 @@ extern int getVersion() {
 }
 
 /*
-//gcc seq-checker.h tokenizer.c parser.c rmc.c validate.c solver.c seq-checker.c string-buffer.c -o seq-checker
+//gcc seq-checker.h tokenizer.c parser.c validate.c solver.c seq-checker.c string-buffer.c -o seq-checker
 
 #include <stdio.h>
 #include <stdlib.h>

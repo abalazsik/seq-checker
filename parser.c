@@ -102,8 +102,6 @@ enum parserState {
 
 struct sequenceDef* parse_sequence(char* script) {
 
-	remove_comments(script);
-
 	ptoken curr_token = NULL;
 	
 	enum parserState state = T_START;

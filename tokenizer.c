@@ -13,8 +13,24 @@ ptoken next_token(char* script, ptoken prev, int shouldFreePrevToken) {
 
 	size_t len = strlen(script);
 
-	while(i < len && (script[i] == ' ' || script[i] == '\n' || script[i] == '\t')) {
-		i++;
+	while (i < len && (script[i] == ' ' || script[i] == '\n' || script[i] == '\t' || script[i] == '/')) {
+		while(i < len && (script[i] == ' ' || script[i] == '\n' || script[i] == '\t')) {
+			i++;
+		}
+		if (i < len - 1 && script[i] == '/') {
+			if (script[i + 1] == '/') { // in line comment
+				while(i < len && script[i] != '\n') {
+					i++;
+				}
+				i++;
+			} else if (script[i + 1] == '*') { // in block comment
+				i+=2;
+				while(i < len - 1 && script[i] != '*' && script[i + 1] != '/') {
+					i++;
+				}
+				i += 2;
+			}
+		}
 	}
 
 	if (len == i) {

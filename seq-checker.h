@@ -1,14 +1,12 @@
 #ifndef _SEQ_CHECKER_H_
 #define _SEQ_CHECKER_H_
 
-#define _SEQ_CHECKER_EXECUTABLE_VERSION_ 4
+#define _SEQ_CHECKER_EXECUTABLE_VERSION_ 5
 
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
-void remove_comments(char* buffer);
 
 struct token {
 	size_t from, to;

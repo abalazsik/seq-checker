@@ -83,7 +83,7 @@ int validate_sequence_def(struct sequenceDef* seqDef) {
 
 /*
 // for manual testing
-// gcc seq-checker.h tokenizer.c parser.c rmc.c validate.c -o validator
+// gcc seq-checker.h tokenizer.c parser.c validate.c -o validator
 
 #include <stdio.h>
 #include <stdlib.h>
