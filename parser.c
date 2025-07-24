@@ -70,7 +70,7 @@ unsigned int tokenToNumber(char* script, ptoken curr_token) {
 
 /*
 The expected format:
-	generate sequence of {A, B, C} where { A < B } starting A ending B limit 10; 
+	generate sequences of {A, B, C} where { A < B } starting A ending B limit 10; 
 */
 
 enum parserState {
@@ -129,7 +129,7 @@ struct sequenceDef* parseSequence(char* script) {
 			state = T_OPERATION;
 			operation_token = curr_token;
 			shouldFreePrevToken = 0;
-		} else if (state == T_OPERATION && isToken(script, curr_token, "sequence")) {
+		} else if (state == T_OPERATION && isToken(script, curr_token, "sequences")) {
 			state = T_SEQUENCE;
 		} else if (state == T_SEQUENCE && isToken(script, curr_token, "of")) {
 			state = T_OF;

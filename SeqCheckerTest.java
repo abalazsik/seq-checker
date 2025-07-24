@@ -1,7 +1,7 @@
 public class SeqCheckerTest {
 	
 	public static void main(String[] args) {
-		String dressUpRutine = "generate sequence of {Cap, Jeans, LeftSock, RightSock, Sweater, Tshirt, UnderWear} where {UnderWear < Jeans, Tshirt < Sweater , Sweater < Cap } limit 5;";
+		String dressUpRutine = "generate sequences of {Cap, Jeans, LeftSock, RightSock, Sweater, Tshirt, UnderWear} where {UnderWear < Jeans, Tshirt < Sweater , Sweater < Cap } limit 5;";
 
 		String result = SeqChecker.getSolution(dressUpRutine);
 

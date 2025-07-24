@@ -36,11 +36,13 @@ Module['onRuntimeInitialized'] = function() {
 		<section>
 			<div>
 				<textarea id="src">// Try one of these expressions
-generate sequence of {B, A, C, D, E} where { E < B, A < C } starting A ending B limit 4;
+generate sequences of {B, A, C, D, E} where { E < B, A < C } starting A ending B limit 4;
 
-/*generate sequence of {B, A, C, D, E} not ending B limit 10;*/
+// count sequences of {B, A, C, D, E} where { E < B, A < C } starting A ending B;
 
-//generate sequence of {B, C, D, A, E} where { A < C };
+/*generate sequences of {B, A, C, D, E} not ending B limit 10;*/
+
+//generate sequences of {B, C, D, A, E} where { A < C };
 </textarea>
 				<textarea id="result" disabled="disabled"></textarea>
 			</div>
