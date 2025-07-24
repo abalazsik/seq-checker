@@ -37,13 +37,25 @@ extern presult getSolution(char* script) {
 	result->isError = 0;
 
 	struct sequenceDef* seqDef = parseSequence(script);
+
 	if (seqDef == NULL) {
 		result->isError = 1;
 		result->text = "syntax error";
-	} else {
-		solve(seqDef, result);
-		freeSequenceDef(seqDef);
+
+		return result;
 	}
+
+	enum validationCode code = validateSequenceDef(seqDef);
+
+	if (code != OK) {
+		result->isError = 1;
+		result->text = getValidationTextByValidationCode(code);
+
+		return result;
+	}
+
+	solve(seqDef, result);
+	freeSequenceDef(seqDef);
 
 	//free(script);
 

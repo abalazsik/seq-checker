@@ -140,11 +140,13 @@ void solveSeq(
 	}
 
 	if (symbolsToOrder == NULL) {
-		if(isSolution(stack, sequenceDef)) {// solution found, aka succ (https://www.youtube.com/watch?v=z_HWtzUHm6s)
-			char* stackAString = stackToString(stack);
-			appendString(buffer, stackAString);
-			appendString(buffer, "\n");
-			free(stackAString);
+		if(isSolution(stack, sequenceDef)) {
+			if (!sequenceDef->isCountQuery) {
+				char* stackAString = stackToString(stack);
+				appendString(buffer, stackAString);
+				appendString(buffer, "\n");
+				free(stackAString);
+			}
 			*foundSolutions = *foundSolutions + 1;
 		}
 		return;
@@ -192,7 +194,7 @@ void solve(struct sequenceDef* sequenceDef, presult result) {
 
 	unsigned int limit = maxSolutions(noSymbols);
 
-	if (limit < sequenceDef->limit) {
+	if (!(sequenceDef->limit > 0 && limit > sequenceDef->limit && !sequenceDef->isCountQuery)) {
 		sequenceDef->limit = limit;
 	}
 
@@ -203,7 +205,9 @@ void solve(struct sequenceDef* sequenceDef, presult result) {
 	solveSeq(stack, sequenceDef, sequenceDef->symbols, &foundSolutions, buffer);
 	freeStack(stack);
 
-	if (foundSolutions == 0) {
+	if(sequenceDef->isCountQuery) {
+		appendUint(buffer, foundSolutions);
+	} else if (foundSolutions == 0) {
 		appendString(buffer, "no solutions");
 		result->isError = 1;
 	}

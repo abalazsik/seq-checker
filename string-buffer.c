@@ -53,6 +53,16 @@ void appendString(psbuffer buffer, char *text) {
 	buffer->length += len;
 }
 
+// probably the least effective int -> string algorithm, but its ok for now
+void appendUint(psbuffer buffer, unsigned int value) {
+	if (value > 0) {
+		char ch = (value % 10) + '0';
+
+		appendUint(buffer, value / 10);
+		appendChar(buffer, ch);
+	}
+}
+
 void resetStringBuffer(psbuffer buffer) {
 	char* text = buffer->text;
 

@@ -50,6 +50,7 @@ struct sequenceDef {
 	struct symbolsDef* symbols;
 	struct rulesDef* rules;
 	unsigned int limit;
+	char isCountQuery;
 };
 
 struct sequenceDef* parseSequence(char* script);
@@ -67,6 +68,20 @@ struct result {
 
 typedef struct result *presult;
 
+enum validationCode {
+	OK,
+	UNIQUE_SYMBOLS,
+	COUNT_QUERY_LIMIT,
+	STARTING_NOT_IN_SYMBOLS_DEFS,
+	ENDING_NOT_IN_SYMBOLS_DEFS,
+	STARTING_EQ_ENDING,
+	RULE_BEFOER_EQ_AFTER,
+	BEFORE_NOT_IN_SYMBOLS_DEFS,
+	AFTER_NOT_IN_SYMBOLS_DEFS
+};
+
+char* getValidationTextByValidationCode(enum validationCode errorCode);
+enum validationCode validateSequenceDef(struct sequenceDef* seqDef);
 int isStackEmpty(struct symbolStack* stack);
 void solve(struct sequenceDef* sequenceDef, presult result);
 char* stackToString(struct symbolStack* stack);

@@ -75,7 +75,7 @@ The expected format:
 
 enum parserState {
 	T_START = 1,
-	T_GENERATE,
+	T_OPERATION,
 	T_SEQUENCE,
 	T_OF,
 	T_S_LEFT_BRACKET,
@@ -106,6 +106,7 @@ struct sequenceDef* parseSequence(char* script) {
 	
 	enum parserState state = T_START;
 
+	ptoken operation_token = NULL;
 	ptoken symbols_start_token = NULL;
 	ptoken rules_start_token = NULL;
 	ptoken starting_token = NULL;
@@ -124,9 +125,11 @@ struct sequenceDef* parseSequence(char* script) {
 
 		//printf("%s\n", substring(script, curr_token));
 
-		if (state == T_START && isToken(script, curr_token, "generate")) {
-			state = T_GENERATE;
-		} else if (state == T_GENERATE && isToken(script, curr_token, "sequence")) {
+		if (state == T_START && (isToken(script, curr_token, "generate") || isToken(script, curr_token, "count"))) {
+			state = T_OPERATION;
+			operation_token = curr_token;
+			shouldFreePrevToken = 0;
+		} else if (state == T_OPERATION && isToken(script, curr_token, "sequence")) {
 			state = T_SEQUENCE;
 		} else if (state == T_SEQUENCE && isToken(script, curr_token, "of")) {
 			state = T_OF;
@@ -264,7 +267,7 @@ struct sequenceDef* parseSequence(char* script) {
 		}
 	}
 	
-	unsigned int limit = 1; // default
+	unsigned int limit = 0; // default 0: unset
 
 	if (limit_token != NULL) {
 		limit = tokenToNumber(script, limit_token);
@@ -275,6 +278,7 @@ struct sequenceDef* parseSequence(char* script) {
 	sequenceDef->symbols = symbolsDef;
 	sequenceDef->rules = rulesDef;
 	sequenceDef->limit = limit;
+	sequenceDef->isCountQuery = isToken(script, operation_token, "count") ? 1 : 0;
 
 	return sequenceDef;
 }

@@ -35,13 +35,32 @@ int symbolDefsContainsSymbol(struct sequenceDef* seqDef, psymbol symbol) {
 	return 0;
 }
 
-int validateSequenceDef(struct sequenceDef* seqDef) {
+char* getValidationTextByValidationCode(enum validationCode errorCode) {
+	switch (errorCode) {
+		case OK: return "Ok";
+		case UNIQUE_SYMBOLS: return "symbols should be unique";
+		case COUNT_QUERY_LIMIT: return "a count query should not be limited";
+		case STARTING_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain starting symbol";
+		case ENDING_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain ending symbol";
+		case STARTING_EQ_ENDING: return "starting and ending cannot be the same";
+		case RULE_BEFOER_EQ_AFTER: return "before, and after symbolshould not be the same in a rule definition";
+		case BEFORE_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain before symbol";
+		case AFTER_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain after symbol";
+	}
+	return NULL;
+}
+
+enum validationCode validateSequenceDef(struct sequenceDef* seqDef) {
 	for (size_t i = 0; i < seqDef->symbols->noSymbols - 1; i++) {// unique symbols check
 		for (size_t j = i + 1; j < seqDef->symbols->noSymbols; j++) {
 			if (symbolEquals(seqDef->symbols->symbols[i],seqDef->symbols->symbols[j])) {
-				return 0;
+				return UNIQUE_SYMBOLS;
 			}
 		}	
+	}
+
+	if (seqDef->isCountQuery == 1 && seqDef->limit > 0) { // a count query should not be limited
+		return COUNT_QUERY_LIMIT;
 	}
 
 	psymbol starting = seqDef->rules->starting;
@@ -49,36 +68,36 @@ int validateSequenceDef(struct sequenceDef* seqDef) {
 
 	if (starting != NULL) {
 		if (!symbolDefsContainsSymbol(seqDef, starting)) { 
-			return 0; // symbol defs does not contains starting symbol
+			return STARTING_NOT_IN_SYMBOLS_DEFS; // symbol defs does not contain starting symbol
 		}
 	}
 
 	if (ending != NULL) {
 		if (!symbolDefsContainsSymbol(seqDef, ending)) { 
-			return 0; // symbol defs does not contains ending symbol
+			return ENDING_NOT_IN_SYMBOLS_DEFS; // symbol defs does not contain ending symbol
 		}
 	}
 
 	if (starting != NULL && ending != NULL) { 
 		if (symbolEquals(starting, ending)) {
-			return 0; // starting and ending cannot be the same
+			return STARTING_EQ_ENDING; // starting and ending cannot be the same
 		}
 	}
 
 	for (size_t i = 0; i < seqDef->rules->noRules; i++) {
 		prule rule = seqDef->rules->rules[i];
 		if (symbolEquals(rule->before, rule->after)) { 
-			return 0; // rule.before != rule.after
+			return RULE_BEFOER_EQ_AFTER; // rule.before != rule.after
 		}
 		if (!symbolDefsContainsSymbol(seqDef, rule->before)) {
-			return 0; // symbols contains before symbol
+			return BEFORE_NOT_IN_SYMBOLS_DEFS; // symbols contains before symbol
 		}
 		if (!symbolDefsContainsSymbol(seqDef, rule->after)) {
-			return 0; // symbols contains after symbol
+			return AFTER_NOT_IN_SYMBOLS_DEFS; // symbols contains after symbol
 		}
 	}
 	
-	return 1;
+	return OK;
 }
 
 /*

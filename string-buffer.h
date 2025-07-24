@@ -16,6 +16,7 @@ psbuffer newStringBuffer(unsigned int initCapacity);
 void expandStringBufferCapacity(psbuffer buffer);
 void appendChar(psbuffer buffer, char ch);
 void appendString(psbuffer buffer, char *text);
+void appendUint(psbuffer buffer, unsigned int value);
 void resetStringBuffer(psbuffer buffer);
 void freeStringBuffer(psbuffer buffer);
 char* unwrap(psbuffer buffer);
