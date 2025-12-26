@@ -7,7 +7,7 @@ public class SeqCheckerTest {
 
 		System.out.printf("Solver version: %d\n", SeqChecker.getVersion());
 
-		System.out.println("Here are 5 valid dress up routines:");
+		System.out.println("Here are 5 ways to dress up:");
 		System.out.println(result);
 	}
 }

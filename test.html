@@ -3,6 +3,7 @@
 		<title>Seq Checker</title>
 		<script src="seq-checker.js"></script>
 		<link rel="stylesheet" href="styles.css" />
+		<meta name="viewport" content="width=device-width">
 	<script>
 
 function checkThoseSeqs() {
@@ -35,7 +36,7 @@ Module['onRuntimeInitialized'] = function() {
 	<body>
 		<section>
 			<div>
-				<textarea id="src">// Try one of these expressions
+				<textarea id="src">// Try one of these commands
 generate sequences of {B, A, C, D, E} where { E < B, A < C } starting A ending B limit 4;
 
 // count sequences of {B, A, C, D, E} where { E < B, A < C } starting A ending B;
@@ -44,10 +45,10 @@ generate sequences of {B, A, C, D, E} where { E < B, A < C } starting A ending B
 
 //generate sequences of {B, C, D, A, E} where { A < C };
 </textarea>
-				<textarea id="result" disabled="disabled"></textarea>
+				<div><button id="run-button" onclick="checkThoseSeqs()">Run</button></div>
 			</div>
 			<div>
-				<button onclick="checkThoseSeqs()">Run</button>
+				<textarea id="result" disabled="disabled"></textarea>
 			</div>
 		</section>
 		<section>

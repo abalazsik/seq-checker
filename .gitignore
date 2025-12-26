@@ -7,6 +7,7 @@ validator
 seq-checker
 seq-checker.js
 seq-checker.so
+seq-checker-tester
 
 *.o
 *.pch
@@ -15,3 +16,4 @@ SeqChecker.h
 SeqChecker.class
 hs_err_**.log
 *.test
+!dressUp.test

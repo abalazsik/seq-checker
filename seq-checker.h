@@ -1,7 +1,7 @@
 #ifndef _SEQ_CHECKER_H_
 #define _SEQ_CHECKER_H_
 
-#define _SEQ_CHECKER_EXECUTABLE_VERSION_ 5
+#define _SEQ_CHECKER_EXECUTABLE_VERSION_ 6
 
 #include <stddef.h>
 #include <stdlib.h>

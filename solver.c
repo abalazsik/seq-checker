@@ -30,7 +30,7 @@ psymbol popFromStack(struct symbolStack* stack) {
 		return NULL;
 	}
 
-	return stack->symbols[stack->sp--];
+	return stack->symbols[--stack->sp];
 }
 
 void freeStack(struct symbolStack* stack) {
@@ -128,6 +128,11 @@ struct symbolsDef* restOfSymbols(struct symbolsDef *original, psymbol minus) {
 	return result;
 }
 
+void freeSymbolsDef(struct symbolsDef* symbolsDef)  {
+	free(symbolsDef->symbols);
+	free(symbolsDef);
+}
+
 void solveSeq(
 	struct symbolStack* stack,
 	struct sequenceDef* sequenceDef,
@@ -165,7 +170,7 @@ void solveSeq(
 		solveSeq(stack, sequenceDef, rest, foundSolutions, buffer);
 
 		if (rest != NULL) {
-			free(rest);
+			freeSymbolsDef(rest);
 		}
 
 		if (*foundSolutions >= sequenceDef->limit) {

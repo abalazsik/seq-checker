@@ -1,0 +1,1 @@
+generate sequences of {Cap, Jeans, LeftSock, RightSock, Sweater, Tshirt, UnderWear} where {UnderWear < Jeans, Tshirt < Sweater , Sweater < Cap } limit 5;

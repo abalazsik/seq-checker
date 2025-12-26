@@ -76,8 +76,11 @@ extern int getVersion() {
 	return _SEQ_CHECKER_EXECUTABLE_VERSION_;
 }
 
-/*
-//gcc seq-checker.h tokenizer.c parser.c validate.c solver.c seq-checker.c string-buffer.c -o seq-checker
+#ifdef _SEQ_CHECKER_TESTER_
+
+// tester application
+
+//gcc seq-checker.h tokenizer.c parser.c validate.c solver.c seq-checker.c string-buffer.c -D_SEQ_CHECKER_TESTER_ -o seq-checker-tester
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,4 +112,5 @@ int main(int argc, char** argv) {
 	
 	return 0;
 }
-*/
+
+#endif

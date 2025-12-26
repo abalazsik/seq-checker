@@ -13,7 +13,8 @@ body {
 }
 
 textarea {
-	width: 49vw;
+	width: -webkit-fill-available;
+	width: -moz-available;
 	min-height: 30vh;
 	resize: vertical;
 	opacity: 80%;
@@ -38,4 +39,11 @@ button {
 	position: absolute;
     bottom: 2px;
     left: 5px;
+}
+
+#run-button {
+    float: right;
+    width: 10%;
+	margin: 1px;
+	font-weight: bold;
 }

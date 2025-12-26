@@ -100,6 +100,12 @@ enum parserState {
 	T_SEMICOLON
 };
 
+static inline ptoken afterNextToken(char* script, ptoken prev) {
+	return nextToken(script, 
+			nextToken(script, prev, 0),
+		1);
+}
+
 struct sequenceDef* parseSequence(char* script) {
 
 	ptoken curr_token = NULL;
@@ -245,8 +251,7 @@ struct sequenceDef* parseSequence(char* script) {
 	for (int i = 0; i < noSymbols; i++) {
 		symbolsDef->symbols[i] = newSymbol(script, curr_symbol_token);
 		if (i < noSymbols - 1) {
-			curr_symbol_token = nextToken(script, curr_symbol_token, 0); // comma
-			curr_symbol_token = nextToken(script, curr_symbol_token, 1);
+			curr_symbol_token = afterNextToken(script, curr_symbol_token);// skipping comma token
 		}
 	}
 
@@ -256,14 +261,11 @@ struct sequenceDef* parseSequence(char* script) {
 	// collect rules
 	ptoken curr_rule_token = rules_start_token;
 	for (int i = 0; i < noRules; i++) {
-		ptoken rule_after_token =  nextToken(script, 
-			nextToken(script, curr_rule_token, 0), // '<' sign
-		 1);
+		ptoken rule_after_token = afterNextToken(script, curr_rule_token); // skipping '<' sign
+
 		rulesDef->rules[i] = newRule(script, curr_rule_token, rule_after_token);
 		if (i < noRules - 1) {
-			curr_rule_token = nextToken(script, 
-				nextToken(script, rule_after_token, 1), // comma
-			0);
+			curr_rule_token = afterNextToken(script, rule_after_token);// skipping comma token
 		}
 	}
 	
