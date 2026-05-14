@@ -10,6 +10,13 @@ void freeSequenceDef(struct sequenceDef* seqDef) {
 	for (int i = 0; i < seqDef->rules->noRules; i++) {
 		free(seqDef->rules->rules[i]);
 	}
+	if (seqDef->rules->starting != NULL) {
+		free(seqDef->rules->starting);
+	}
+	if (seqDef->rules->ending != NULL) {
+		free(seqDef->rules->ending);
+	}
+
 	for (int i = 0; i < seqDef->symbols->noSymbols; i++) {
 		freeSymbol(seqDef->symbols->symbols[i]);
 	}
@@ -31,6 +38,13 @@ char* stackToString(struct symbolStack* stack) {
 
 	return unwrap(buffer);
 }
+
+void freeResult(presult result) {
+	free(result->text);
+	free(result);
+}
+
+// Helper functions we can use from js to interact with the module
 
 extern presult getSolution(char* script) {
 	presult result = (presult)malloc(sizeof(struct result));
@@ -62,8 +76,6 @@ extern presult getSolution(char* script) {
 	return result;
 }
 
-// Helper functions we can use from js to extract the result
-
 extern int isError(presult result) {
 	return result->isError;
 }
@@ -76,11 +88,15 @@ extern int getVersion() {
 	return _SEQ_CHECKER_EXECUTABLE_VERSION_;
 }
 
+extern void cleanUp(presult result) {
+	freeResult(result);
+}
+
 #ifdef _SEQ_CHECKER_TESTER_
 
 // tester application
 
-//gcc seq-checker.h tokenizer.c parser.c validate.c solver.c seq-checker.c string-buffer.c -D_SEQ_CHECKER_TESTER_ -o seq-checker-tester
+//gcc seq-checker.h tokenizer.c parser.c validator.c solver.c seq-checker.c string-buffer.c -D_SEQ_CHECKER_TESTER_ -o seq-checker-tester
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -109,6 +125,8 @@ int main(int argc, char** argv) {
 	struct result* result = getSolution(buffer);
 
 	printf("%s\n", getResultText(result));
+
+	cleanUp(result);
 	
 	return 0;
 }

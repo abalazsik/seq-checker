@@ -13,7 +13,7 @@ JNIEXPORT jstring JNICALL Java_SeqChecker_getSolution(JNIEnv *env, jclass clz, j
 	if (isError(result)) {
 		(*env)->ThrowNew(
 			env,
-			(*env)->FindClass(env,"java.lang.IllegalArgumentException"),
+			(*env)->FindClass(env,"java/lang/IllegalArgumentException"),
 			getResultText(result)
 		);
 		return NULL;

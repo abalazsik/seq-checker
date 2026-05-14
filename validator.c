@@ -43,7 +43,7 @@ char* getValidationTextByValidationCode(enum validationCode errorCode) {
 		case STARTING_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain starting symbol";
 		case ENDING_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain ending symbol";
 		case STARTING_EQ_ENDING: return "starting and ending cannot be the same";
-		case RULE_BEFOER_EQ_AFTER: return "before, and after symbolshould not be the same in a rule definition";
+		case RULE_BEFORE_EQ_AFTER: return "before, and after symbols should not be the same in a rule definition";
 		case BEFORE_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain before symbol";
 		case AFTER_NOT_IN_SYMBOLS_DEFS: return "symbol defs does not contain after symbol";
 	}
@@ -87,7 +87,7 @@ enum validationCode validateSequenceDef(struct sequenceDef* seqDef) {
 	for (size_t i = 0; i < seqDef->rules->noRules; i++) {
 		prule rule = seqDef->rules->rules[i];
 		if (symbolEquals(rule->before, rule->after)) { 
-			return RULE_BEFOER_EQ_AFTER; // rule.before != rule.after
+			return RULE_BEFORE_EQ_AFTER; // rule.before != rule.after
 		}
 		if (!symbolDefsContainsSymbol(seqDef, rule->before)) {
 			return BEFORE_NOT_IN_SYMBOLS_DEFS; // symbols contains before symbol
@@ -102,7 +102,7 @@ enum validationCode validateSequenceDef(struct sequenceDef* seqDef) {
 
 /*
 // for manual testing
-// gcc seq-checker.h tokenizer.c parser.c validate.c -o validator
+// gcc seq-checker.h tokenizer.c parser.c validator.c -o validator
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -8,5 +8,6 @@ presult getSolution(char* script);
 int isError(presult result);
 char* getResultText(presult result);
 int getVersion();
+void cleanUp(presult result);
 
 #endif

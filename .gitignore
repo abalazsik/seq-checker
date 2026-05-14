@@ -13,7 +13,7 @@ seq-checker-tester
 *.pch
 
 SeqChecker.h
-SeqChecker.class
+*.class
 hs_err_**.log
 *.test
 !dressUp.test

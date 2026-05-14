@@ -46,7 +46,7 @@ Build the linux library with:
 Run the example:
 
 ```
-java SeqCheckerTest.java
+javac SeqCheckerTest.java && java SeqCheckerTest
 ```
 
 Requirements:

@@ -20,13 +20,13 @@ function build_lib() {
 	generateHeader
 	JAVA_HEADERS="$JAVA_HOME/include"
 	echo $JAVA_HEADERS
-	OG_SOURCES="seq-checker.h tokenizer.c parser.c validate.c solver.c seq-checker.c string-buffer.c"
+	OG_SOURCES="seq-checker.h tokenizer.c parser.c validator.c solver.c seq-checker.c string-buffer.c"
 	BINDINGS="SeqChecker.h java-binding.c"
 	gcc -shared -fPIC -I$JAVA_HEADERS -I$JAVA_HEADERS/linux $OG_SOURCES $BINDINGS -o seq-checker.so
 }
 
 function build_tester() {
-	gcc seq-checker.h tokenizer.c parser.c validate.c solver.c seq-checker.c string-buffer.c -D_SEQ_CHECKER_TESTER_ -g -O0 -o seq-checker-tester
+	gcc seq-checker.h tokenizer.c parser.c validator.c solver.c seq-checker.c string-buffer.c -D_SEQ_CHECKER_TESTER_ -g -O0 -o seq-checker-tester
 }
 
 function memcheck() {

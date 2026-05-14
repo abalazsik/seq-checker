@@ -22,6 +22,7 @@ function checkThoseSeqs() {
 		let solution = Module.UTF8ToString(Module._getResultText(result));
 		resultTextArea.value = "Solution(s) found:\n" + solution;
 	}
+	Module._cleanUp(result);
 }
 
 Module['onRuntimeInitialized'] = function() {
